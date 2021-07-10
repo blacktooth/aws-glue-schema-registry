@@ -1,6 +1,7 @@
 
 # AWS Glue Schema Registry Library
 ![Build Status](https://github.com/awslabs/aws-glue-schema-registry/workflows/MavenCI/badge.svg?branch=master&event=push)
+![CI Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiTmg0MCtCOU15WnJCRG5vZnM3dFUrWmFTRDFVTEdFYUlLT1hsQnBwTWF2VkVvVzgxckZ5NXV5SDRoUkNRMkNYdmNKa0UzWGhHTENWTDZxTHlyZm5rSTlVPSIsIml2UGFyYW1ldGVyU3BlYyI6Imt3TE5ndnE4M2RtVDcvQzkiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main)
 [![Apache 2 License](https://img.shields.io/github/license/awslabs/s2n.svg)](http://aws.amazon.com/apache-2-0/)
 ![Java](https://img.shields.io/badge/language-java-blue.svg)
 
@@ -59,7 +60,7 @@ The recommended way to use the AWS Glue Schema Registry Library for Java is to c
   <dependency>
       <groupId>software.amazon.glue</groupId>
       <artifactId>schema-registry-serde</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1</version>
   </dependency>
   ```
 ### Code Example
@@ -407,7 +408,7 @@ It should look like this
 * If using bash, run the below commands to set-up your CLASSPATH in your bash_profile. (For any other shell, update the environment accordingly.)
   ```bash
       echo 'export GSR_LIB_BASE_DIR=<>' >>~/.bash_profile
-      echo 'export GSR_LIB_VERSION=1.1.0' >>~/.bash_profile
+      echo 'export GSR_LIB_VERSION=1.1.1' >>~/.bash_profile
       echo 'export KAFKA_HOME=<your kafka installation directory>' >>~/.bash_profile
       echo 'export CLASSPATH=$CLASSPATH:$GSR_LIB_BASE_DIR/avro-kafkaconnect-converter/target/schema-registry-kafkaconnect-converter-$GSR_LIB_VERSION.jar:$GSR_LIB_BASE_DIR/common/target/schema-registry-common-$GSR_LIB_VERSION.jar:$GSR_LIB_BASE_DIR/avro-serializer-deserializer/target/schema-registry-serde-$GSR_LIB_VERSION.jar' >>~/.bash_profile
       source ~/.bash_profile
@@ -466,7 +467,7 @@ It should look like this
   <dependency>
         <groupId>software.amazon.glue</groupId>
         <artifactId>schema-registry-kafkastreams-serde</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1</version>
   </dependency>
   ```
 
