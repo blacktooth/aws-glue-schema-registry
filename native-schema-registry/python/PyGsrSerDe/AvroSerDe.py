@@ -7,7 +7,7 @@ class AvroSerializer:
     def parse_schema(self, schema):
         return fastavro.parse_schema(schema)
 
-    def serialize(self, data, schema):
+    def serialize(self, data: dict, schema: dict):
         if data is None:
             return None
         fo = BytesIO()
@@ -20,7 +20,7 @@ class AvroDeserializer:
     def __init__(self):
         pass
 
-    def deserialize(self, bytes, schema):
+    def deserialize(self, bytes: bytes, schema: dict):
         if bytes is None:
             return None
         try:
@@ -32,10 +32,10 @@ class AvroDeserializer:
             return fullrecord
 
         except Exception as e:
-            raise AwsSchemaRegistryException(e)
+            raise AvroSerdeException(e)
 
 
-class AwsSchemaRegistryException(Exception):
+class AvroSerdeException(Exception):
     """
     Generic runtime exception to throw in case of serialization / de-serialization exceptions
     """
