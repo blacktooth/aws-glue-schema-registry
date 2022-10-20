@@ -37,14 +37,13 @@ class GlueSchemaRegistryKafkaDeserializer:
         }
         self.data_format_deserializer = deserializers.get(self.data_format)
 
-    def deserialize(self, data: dict, schema: dict):
+    def deserialize(self, data: bytes):
         if data is None:
             return None
-        if schema is None:
-            return None
 
-        record_bytes = self.data_format_deserializer.deserialize(data, schema)
+        record_bytes = self.gsr_deserializer.decode(data)
+        schema = self.gsr_deserializer.decode_schema(data)
 
-        decoded = self.gsr_deserializer.decode(record_bytes)
+        decoded = self.data_format_deserializer.deserialize(record_bytes, schema)
 
         return decoded
