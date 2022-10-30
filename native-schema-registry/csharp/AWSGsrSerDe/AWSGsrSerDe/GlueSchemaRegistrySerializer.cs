@@ -99,7 +99,7 @@ namespace AWSGsrSerDe
 
         private void ReleaseUnmanagedResources()
         {
-            _serializer.Dispose();
+            _serializer?.Dispose();
         }
 
         private void Dispose(bool disposing)

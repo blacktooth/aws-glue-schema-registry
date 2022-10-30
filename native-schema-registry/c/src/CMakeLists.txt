@@ -125,7 +125,8 @@ swig_add_library(
 list(APPEND PYTHON_INCLUDES
         "${PROJECT_SOURCE_DIR}/include/"
         #TODO: Path needs to be configurable per version and OS
-        "/usr/include/python3.7m/")
+        "/usr/include/python3.7m/"
+        "/usr/include/python3.10/")
 
 target_include_directories(${PYTHON_MODULE_NAME} PUBLIC ${PYTHON_INCLUDES})
 set_target_properties(

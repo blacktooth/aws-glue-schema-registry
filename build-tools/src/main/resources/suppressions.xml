@@ -29,4 +29,13 @@
               checks="[a-zA-Z0-9]*"/>
     <suppress files="AvroData\.java"
               checks="[a-zA-Z0-9]*"/>
+    <!--  native schema registry   -->
+    <suppress files="ByteArrayConverter\.java"
+              checks="[a-zA-Z0-9]*"/>
+    <suppress files="DataTypes\.java"
+              checks="[a-zA-Z0-9]*"/>
+    <suppress files="GlueSchemaRegistryDeserializationHandler\.java"
+              checks="[a-zA-Z0-9]*"/>
+    <suppress files="GlueSchemaRegistrySerializationHandler\.java"
+              checks="[a-zA-Z0-9]*"/>
 </suppressions>
