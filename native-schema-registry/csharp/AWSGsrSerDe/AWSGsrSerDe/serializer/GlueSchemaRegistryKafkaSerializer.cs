@@ -13,17 +13,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AWSGsrSerDe.common;
+using Confluent.Kafka;
 
 namespace AWSGsrSerDe.serializer
 {
     /// <summary>
     /// Glue Schema Registry Serializer to be used with Kafka Producers.
     /// </summary>
-    public class GlueSchemaRegistryKafkaSerializer
+    public class GlueSchemaRegistryKafkaSerializer : ISerializer<object>, IAsyncSerializer<object>
     {
         private readonly GlueSchemaRegistrySerializer _glueSchemaRegistrySerializer;
-        
+
         private GlueSchemaRegistryConfiguration _configuration;
         private string _dataFormat;
         private ISchemaNameStrategy _schemaNamingStrategy;
@@ -35,10 +37,10 @@ namespace AWSGsrSerDe.serializer
         public GlueSchemaRegistryKafkaSerializer(Dictionary<string, dynamic> configs)
         {
             Configure(configs);
-            
+
             _glueSchemaRegistrySerializer = new GlueSchemaRegistrySerializer();
         }
-        
+
         /// <summary>
         /// Configures the <see cref="GlueSchemaRegistryKafkaSerializer"/> instance
         /// </summary>
@@ -50,6 +52,18 @@ namespace AWSGsrSerDe.serializer
             _schemaNamingStrategy = new DefaultSchemaNameStrategy();
         }
 
+        /// <inheritdoc />
+        public byte[] Serialize(object data, SerializationContext context)
+        {
+            return Serialize(data, context.Topic);
+        }
+
+        /// <inheritdoc />
+        public Task<byte[]> SerializeAsync(object data, SerializationContext context)
+        {
+            return Task<byte[]>.Factory.StartNew(() => Serialize(data, context.Topic));
+        }
+        
         /// <summary>
         /// serializes the given Object to an byte array.
         /// </summary>
