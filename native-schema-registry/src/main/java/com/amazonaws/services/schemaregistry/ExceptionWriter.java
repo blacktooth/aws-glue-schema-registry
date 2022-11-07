@@ -1,6 +1,5 @@
 package com.amazonaws.services.schemaregistry;
 
-import org.apache.kafka.common.protocol.types.Field;
 import org.graalvm.nativeimage.c.type.CTypeConversion;
 
 import java.util.StringJoiner;
@@ -35,19 +34,20 @@ public class ExceptionWriter {
         throwError(errorPointer, errorMessageAsCString.get(), FAILURE_CODE);
         errorMessageAsCString.close();
     }
+
     /**
      * Captures the full stack trace message of a Throwable, so it can be observed in the target language layer,
      * For example, an exception thrown in Java layer will have these messages printed in target language layer:
-     *
-        Exception occurred while fetching or registering schema definition = {"type":"record","name":"User","namespace":"example.avro","fields":[{"name":"name","type":"string"},{"name":"favorite_number","type":["int","null"]},{"name":"favorite_color","type":["string","null"]}]}, schema name = test-topic-json
-            com.amazonaws.services.schemaregistry.common.SchemaByDefinitionFetcher.getORRegisterSchemaVersionId(SchemaByDefinitionFetcher.java:99)
-            com.amazonaws.services.schemaregistry.serializers.GlueSchemaRegistrySerializationFacade.getOrRegisterSchemaVersion(GlueSchemaRegistrySerializationFacade.java:86)
-            com.amazonaws.services.schemaregistry.serializers.GlueSchemaRegistrySerializationFacade.encode(GlueSchemaRegistrySerializationFacade.java:125)
-            com.amazonaws.services.schemaregistry.serializers.GlueSchemaRegistrySerializerImpl.encode(GlueSchemaRegistrySerializerImpl.java:79)
-            com.amazonaws.services.schemaregistry.GlueSchemaRegistrySerializationHandler.encodeWithSchema(GlueSchemaRegistrySerializationHandler.java:90)
-        at AWSGsrSerDe.GlueSchemaRegistrySerializer.Encode(String transportName, GlueSchemaRegistrySchema schema, Byte[] bytes) in /Users/haoqyang/Documents/gsr_multilang/aws-glue-schema-registry/native-schema-registry/csharp/AWSGsrSerDe/AWSGsrSerDe/GlueSchemaRegistrySerializer.cs:line 78
-        at AWSGsrSerDe.serializer.GlueSchemaRegistryKafkaSerializer.Serialize(Object data, String topic) in /Users/haoqyang/Documents/gsr_multilang/aws-glue-schema-registry/native-schema-registry/csharp/AWSGsrSerDe/AWSGsrSerDe/serializer/GlueSchemaRegistryKafkaSerializer.cs:line 68
-        at AWSGsrSerDe.Tests.serializer.GlueSchemaRegistryKafkaSerializerTests.KafkaSerDeTestForAvroGenericRecord() in /Users/haoqyang/Documents/gsr_multilang/aws-glue-schema-registry/native-schema-registry/csharp/AWSGsrSerDe/AWSGsrSerDe.Tests/serializer/GlueSchemaRegistryKafkaSerializerTests.cs:line 52
+     * <p>
+     * Exception occurred while fetching or registering schema definition = {"type":"record","name":"User","namespace":"example.avro","fields":[{"name":"name","type":"string"},{"name":"favorite_number","type":["int","null"]},{"name":"favorite_color","type":["string","null"]}]}, schema name = test-topic-json
+     * com.amazonaws.services.schemaregistry.common.SchemaByDefinitionFetcher.getORRegisterSchemaVersionId(SchemaByDefinitionFetcher.java:99)
+     * com.amazonaws.services.schemaregistry.serializers.GlueSchemaRegistrySerializationFacade.getOrRegisterSchemaVersion(GlueSchemaRegistrySerializationFacade.java:86)
+     * com.amazonaws.services.schemaregistry.serializers.GlueSchemaRegistrySerializationFacade.encode(GlueSchemaRegistrySerializationFacade.java:125)
+     * com.amazonaws.services.schemaregistry.serializers.GlueSchemaRegistrySerializerImpl.encode(GlueSchemaRegistrySerializerImpl.java:79)
+     * com.amazonaws.services.schemaregistry.GlueSchemaRegistrySerializationHandler.encodeWithSchema(GlueSchemaRegistrySerializationHandler.java:90)
+     * at AWSGsrSerDe.GlueSchemaRegistrySerializer.Encode(String transportName, GlueSchemaRegistrySchema schema, Byte[] bytes) in /Users/haoqyang/Documents/gsr_multilang/aws-glue-schema-registry/native-schema-registry/csharp/AWSGsrSerDe/AWSGsrSerDe/GlueSchemaRegistrySerializer.cs:line 78
+     * at AWSGsrSerDe.serializer.GlueSchemaRegistryKafkaSerializer.Serialize(Object data, String topic) in /Users/haoqyang/Documents/gsr_multilang/aws-glue-schema-registry/native-schema-registry/csharp/AWSGsrSerDe/AWSGsrSerDe/serializer/GlueSchemaRegistryKafkaSerializer.cs:line 68
+     * at AWSGsrSerDe.Tests.serializer.GlueSchemaRegistryKafkaSerializerTests.KafkaSerDeTestForAvroGenericRecord() in /Users/haoqyang/Documents/gsr_multilang/aws-glue-schema-registry/native-schema-registry/csharp/AWSGsrSerDe/AWSGsrSerDe.Tests/serializer/GlueSchemaRegistryKafkaSerializerTests.cs:line 52
      */
     private static String getFullStackTraceMessage(Throwable throwable) {
         String throwableMessage;
@@ -60,7 +60,7 @@ public class ExceptionWriter {
             throwableMessage = throwable.getClass().getName() + " is thrown, but there is no detail message";
         } else {
             throwableMessage = throwable.getMessage();
-            if (throwable.getStackTrace()!= null){
+            if (throwable.getStackTrace() != null) {
                 shouldAppendStackTrace = true;
             }
         }
