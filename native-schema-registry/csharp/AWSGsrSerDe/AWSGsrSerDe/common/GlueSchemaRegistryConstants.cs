@@ -24,7 +24,10 @@ namespace AWSGsrSerDe.common
         public const string AvroRecordType = "avroRecordType";
         public const string ProtobufMessageDescriptor = "protobufMessageDescriptor";
         public const string JsonObjectType = "jsonObjectType";
+        public const string SecondaryDeserializer = "secondaryDeserializer";
         public const string CacheItemExpirationTime = "cacheItemExpirationTime";
+
+        public const byte HeaderVersionByte = 3;
 
         // TODO: need to expose it from Java to avoid code duplication
         public enum DataFormat
