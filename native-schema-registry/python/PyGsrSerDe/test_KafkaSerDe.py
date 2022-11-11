@@ -11,8 +11,6 @@ class TestExample(unittest.TestCase):
 class TestKafkaSerDe(unittest.TestCase):
 
     def test_serde(self):
-        ser = GlueSchemaRegistryKafkaSerializer()
-        dsr = GlueSchemaRegistryKafkaDeserializer()
 
         table = [{'name': 'Bob', 'friends': 42, 'age': 33},
                  {'name': 'Jim', 'friends': 13, 'age': 69},
@@ -31,10 +29,29 @@ class TestKafkaSerDe(unittest.TestCase):
             ]
         }
 
-        bytes = ser.serialize(table, schema, 'topic name')
+        config = {
+            'schema': schema,
+            'topic': 'placeholder topic',
+            'dataformat': 'AVRO'
+        }
+
+        ser = GlueSchemaRegistryKafkaSerializer(config)
+        dsr = GlueSchemaRegistryKafkaDeserializer(config)
+
+        #test functionality for kafka python
+        bytes = ser.serialize_for_kafka_python(table)
         self.assertTrue(len(bytes) != 0)
 
-        decoded = dsr.deserialize(bytes, schema)
+        decoded = dsr.deserialize_for_kafka_python(bytes)
+        self.assertTrue(len(decoded) != 0)
+
+        self.assertEqual(decoded, table)
+
+        # test functionality for confluent
+        bytes = ser.serialize_for_confluent(table, '')
+        self.assertTrue(len(bytes) != 0)
+
+        decoded = dsr.deserialize_for_confluent('serializationcontext', bytes)
         self.assertTrue(len(decoded) != 0)
 
         self.assertEqual(decoded, table)
