@@ -39,19 +39,19 @@ class TestKafkaSerDe(unittest.TestCase):
         dsr = GlueSchemaRegistryKafkaDeserializer(config)
 
         #test functionality for kafka python
-        bytes = ser.serialize_for_kafka_python(table)
+        bytes = ser.serialize_for_kafka_python_client(table)
         self.assertTrue(len(bytes) != 0)
 
-        decoded = dsr.deserialize_for_kafka_python(bytes)
+        decoded = dsr.deserialize_for_kafka_python_client(bytes)
         self.assertTrue(len(decoded) != 0)
 
         self.assertEqual(decoded, table)
 
         # test functionality for confluent
-        bytes = ser.serialize_for_confluent(table, '')
+        bytes = ser.serialize_for_confluent_python_kafka_client(table, '')
         self.assertTrue(len(bytes) != 0)
 
-        decoded = dsr.deserialize_for_confluent('serializationcontext', bytes)
+        decoded = dsr.deserialize_for_confluent_python_kafka_client('serializationcontext', bytes)
         self.assertTrue(len(decoded) != 0)
 
         self.assertEqual(decoded, table)

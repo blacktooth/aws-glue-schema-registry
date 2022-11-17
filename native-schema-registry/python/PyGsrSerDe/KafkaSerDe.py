@@ -7,7 +7,14 @@ class GlueSchemaRegistryKafkaSerializer:
     """A serializer to process and serialize kafka records."""
 
     def __init__(self, configs: dict):
-        """Create a GlueSchemaRegistryKafkaSerializer object."""
+        """Create a GlueSchemaRegistryKafkaSerializer object.
+
+        Args:
+            configs -- a dictionary containing necessary configuration properties, such as dataformat, schema, and schema_naming_strategy
+
+        Returns:
+            a GlueSchemaRegistryKafkaSerializer object.
+        """
         self.config = GlueSchemaRegistryConfiguration(configs)
         self.gsr_serializer = GlueSchemaRegistrySerializer
         serializers = {
@@ -21,8 +28,15 @@ class GlueSchemaRegistryKafkaSerializer:
         """Get method for AvroSerializer. Prevents having to initialize unused serializers."""
         return AvroSerializer()
 
-    def serialize_for_kafka_python(self, data: dict):
-        """Process and serialize a record."""
+    def serialize_for_kafka_python_client(self, data: dict):
+        """Process and serialize a record.
+
+        Args:
+            data -- the record to be serialized, as a dictionary.
+
+        Returns:
+            the encoded record, along with the topic and schema, as serialized bytes.
+        """
         if data is None:
             return None
 
@@ -35,8 +49,15 @@ class GlueSchemaRegistryKafkaSerializer:
 
         return encoded
 
-    def serialize_for_confluent(self, data: dict, serializationcontext: object = None):
-        """Process and serialize a record, with serializationcontext as an additional input."""
+    def serialize_for_confluent_python_kafka_client(self, data: dict, serializationcontext: object = None):
+        """Process and serialize a record, with serializationcontext as an additional input.
+
+        Args:
+            data -- the record to be serialized, as a dictionary.
+
+        Returns:
+            the encoded record, along with the topic and schema, as serialized bytes.
+        """
         if data is None:
             return None
 
@@ -54,7 +75,14 @@ class GlueSchemaRegistryKafkaDeserializer:
     """A deserializer to process and deserialize bytes into records."""
 
     def __init__(self, configs: dict):
-        """Create a GlueSchemaRegistryDeserializer object."""
+        """Create a GlueSchemaRegistryDeserializer object.
+
+        Args:
+            configs -- a dictionary containing necessary configuration properties, such as dataformat and schema
+
+        Returns:
+            a GlueSchemaRegistryKafkaDeserializer object.
+        """
         self.config = GlueSchemaRegistryConfiguration(configs)
         self.gsr_deserializer = GlueSchemaRegistryDeserializer
         deserializers = {
@@ -68,8 +96,15 @@ class GlueSchemaRegistryKafkaDeserializer:
         """Get method for AvroDeserializer. Prevents having to initialize unused deserializers."""
         return AvroDeserializer()
 
-    def deserialize_for_kafka_python(self, data: bytes):
-        """Deserialize and process bytes into a record."""
+    def deserialize_for_kafka_python_client(self, data: bytes):
+        """Deserialize and process bytes into a record.
+
+        Args:
+            data -- the bytes to be deserialized into a record.
+
+        Returns:
+            the decoded record.
+        """
         if data is None:
             return None
 
@@ -80,8 +115,15 @@ class GlueSchemaRegistryKafkaDeserializer:
 
         return decoded
 
-    def deserialize_for_confluent(self, serializationcontext:object, data: bytes):
-        """Deserialize and process bytes into a record, with serializationcontext as an additional input."""
+    def deserialize_for_confluent_python_kafka_client(self, serializationcontext:object, data: bytes):
+        """Deserialize and process bytes into a record, with serializationcontext as an additional input.
+
+        Args:
+            data -- the bytes to be deserialized into a record.
+
+        Returns:
+            the decoded record.
+        """
         if data is None:
             return None
 

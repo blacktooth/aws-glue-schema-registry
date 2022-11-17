@@ -9,13 +9,31 @@ class AvroSerializer:
     # will parse it automatically. However, parsing and saving the schema
     # saves time if calling serialize repeatedly.
     def parse_schema(self, schema: dict):
-        """Parse and return the schema."""
+        """Parse and return the schema.
+
+        Args:
+            schema -- pass in a schema to parse
+
+        Returns:
+            A parsed schema.
+        """
         return fastavro.parse_schema(schema)
 
     def serialize(self, data: dict, schema: dict):
-        """Serialize a record and return the serialized bytes."""
-        if (data is None) or (schema is None):
+        """Serialize a record and return the serialized bytes.
+
+        Args:
+            data -- the record being serialized
+            schema -- the schema for the record being serialized
+
+        Returns:
+            The serialized bytes.
+        """
+        if data is None:
             return None
+        if schema is None:
+            raise ValueError('Schema cannot be None')
+
         fo = BytesIO()
         fastavro.writer(fo, schema, data)
         return fo.getvalue()
@@ -25,9 +43,19 @@ class AvroDeserializer:
     """A deserializer for deserializing bytes into AVRO records."""
 
     def deserialize(self, bytes: bytes, schema: dict):
-        """Deserialize bytes into a record."""
-        if (bytes is None) or (schema is None):
+        """Deserialize bytes into a record.
+
+        Args:
+            bytes -- the bytes to be deserialized
+            schema -- the schema for the record being deserialized
+
+        Returns:
+            The deserialized record.
+        """
+        if bytes is None:
             return None
+        if schema is None:
+            raise ValueError('Schema cannot be None')
         try:
             fo = BytesIO(bytes)
             avro_reader = fastavro.reader(fo, schema)
