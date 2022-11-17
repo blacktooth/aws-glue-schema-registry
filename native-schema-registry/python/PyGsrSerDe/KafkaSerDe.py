@@ -28,10 +28,11 @@ class GlueSchemaRegistryKafkaSerializer:
         """Get method for AvroSerializer. Prevents having to initialize unused serializers."""
         return AvroSerializer()
 
-    def serialize_for_kafka_python_client(self, data: dict):
+    def serialize(self, topic: str, data: dict):
         """Process and serialize a record.
 
         Args:
+            topic -- the name of the topic.
             data -- the record to be serialized, as a dictionary.
 
         Returns:
@@ -42,15 +43,15 @@ class GlueSchemaRegistryKafkaSerializer:
 
         serialized_record = self.data_format_serializer.serialize(data, self.config.schema)
 
-        schema_name = self.config.schema_naming_strategy.getSchemaName(data, self.config.topic)
+        schema_name = self.config.schema_naming_strategy.getSchemaName(data, topic)
         gsr_schema = GlueSchemaRegistrySchema(schema_name, self.config.schema, self.config.dataformat)
 
-        encoded = self.gsr_serializer.encode(self.config.topic, gsr_schema, serialized_record)
+        encoded = self.gsr_serializer.encode(topic, gsr_schema, serialized_record)
 
         return encoded
 
-    def serialize_for_confluent_python_kafka_client(self, data: dict, serializationcontext: object = None):
-        """Process and serialize a record, with serializationcontext as an additional input.
+    def serialize_for_kafka_python_client(self, data: dict):
+        """A wrapper for the serialize method, intended as a callable for kafka python client consumer.
 
         Args:
             data -- the record to be serialized, as a dictionary.
@@ -58,17 +59,18 @@ class GlueSchemaRegistryKafkaSerializer:
         Returns:
             the encoded record, along with the topic and schema, as serialized bytes.
         """
-        if data is None:
-            return None
+        return self.serialize(self.config.topic, data)
 
-        serialized_record = self.data_format_serializer.serialize(data, self.config.schema)
+    def serialize_for_confluent_python_kafka_client(self, data: dict, serializationcontext: object = None):
+        """A wrapper for the serialize method, intended as a callable for confluent python kafka client consumer.
 
-        schema_name = self.config.schema_naming_strategy.getSchemaName(data, serializationcontext.topic)
-        gsr_schema = GlueSchemaRegistrySchema(schema_name, self.config.schema, self.config.dataformat)
+        Args:
+            data -- the record to be serialized, as a dictionary.
 
-        encoded = self.gsr_serializer.encode(serializationcontext.topic, gsr_schema, serialized_record)
-
-        return encoded
+        Returns:
+            the encoded record, along with the topic and schema, as serialized bytes.
+        """
+        return self.serialize(serializationcontext.topic, data)
 
 
 class GlueSchemaRegistryKafkaDeserializer:
@@ -96,7 +98,7 @@ class GlueSchemaRegistryKafkaDeserializer:
         """Get method for AvroDeserializer. Prevents having to initialize unused deserializers."""
         return AvroDeserializer()
 
-    def deserialize_for_kafka_python_client(self, data: bytes):
+    def deserializer(self, data: bytes):
         """Deserialize and process bytes into a record.
 
         Args:
@@ -115,8 +117,8 @@ class GlueSchemaRegistryKafkaDeserializer:
 
         return decoded
 
-    def deserialize_for_confluent_python_kafka_client(self, serializationcontext:object, data: bytes):
-        """Deserialize and process bytes into a record, with serializationcontext as an additional input.
+    def deserialize_for_kafka_python_client(self, data: bytes):
+        """A wrapper for the deserialize method, intended as a callable for kafka python client consumer.
 
         Args:
             data -- the bytes to be deserialized into a record.
@@ -124,12 +126,15 @@ class GlueSchemaRegistryKafkaDeserializer:
         Returns:
             the decoded record.
         """
-        if data is None:
-            return None
+        return self.deserializer(data)
 
-        record_bytes = self.gsr_deserializer.decode(data)
-        schema = self.gsr_deserializer.decode_schema(data)
+    def deserialize_for_confluent_python_kafka_client(self, serializationcontext:object, data: bytes):
+        """A wrapper for the deserialize method, intended as a callable for confluent python kafka client consumer.
 
-        decoded = self.data_format_deserializer.deserialize(record_bytes, schema)
+        Args:
+            data -- the bytes to be deserialized into a record.
 
-        return decoded
+        Returns:
+            the decoded record.
+        """
+        return self.deserializer(data)

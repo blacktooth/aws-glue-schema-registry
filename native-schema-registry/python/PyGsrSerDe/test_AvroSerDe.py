@@ -54,6 +54,10 @@ class TestAvroSerDe(unittest.TestCase):
 
         self.assertEqual(decoded, table)
 
+    def test_complex_serde(self):
+        ser = AvroSerializer()
+        dsr = AvroDeserializer()
+
         complex_table = [{'name': 'Bob', 'friends': 42, 'age': 33, 'dominant hand': 'right',
                           'allergies': ['apples', 'strawberries']},
                          {'name': 'Jim', 'friends': 13, 'age': 69, 'dominant hand': 'right', 'allergies': []},
@@ -94,6 +98,10 @@ class TestAvroSerDe(unittest.TestCase):
 
         self.assertEqual(decoded, complex_table)
 
+    def test_enum_serde(self):
+        ser = AvroSerializer()
+        dsr = AvroDeserializer()
+
         enum_table = [{'name': 'Bob', 'friends': 42, 'age': 33, 'dominant hand': 'right'},
                          {'name': 'Jim', 'friends': 13, 'age': 69, 'dominant hand': 'right'},
                          {'name': 'Joe', 'friends': 86, 'age': 17, 'dominant hand': 'left'},
@@ -126,6 +134,10 @@ class TestAvroSerDe(unittest.TestCase):
         self.assertTrue(len(decoded) != 0)
 
         self.assertEqual(decoded, enum_table)
+
+    def test_array_serde(self):
+        ser = AvroSerializer()
+        dsr = AvroDeserializer()
 
         array_table = [{'name': 'Bob', 'friends': 42, 'age': 33, 'allergies': ['apples', 'strawberries']},
                          {'name': 'Jim', 'friends': 13, 'age': 69, 'allergies': []},
