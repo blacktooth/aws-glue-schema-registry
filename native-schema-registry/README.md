@@ -3,7 +3,10 @@
 This module provides a native shared library (.so, .dll) version of the AWS Glue Schema Registry SerDes. 
 It uses GraalVM to generate the shared library. 
 
+## Changes necessary to build
+Change `/native-schema-registry/src/main/java/com/amazonaws/services/schemaregistry/DataTypes.java` L25 to actual absolute path of native schema registry directory. 
 
+(TODO: Eliminate the need to make this change each time)
 
 #### Initialize class at build time when building GraalVM Native Image
 GraalVM needs to know AOT(ahead-of-time) the reflectively accessed program elements, therefore we
