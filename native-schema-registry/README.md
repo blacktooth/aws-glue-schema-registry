@@ -8,6 +8,10 @@ Change `/native-schema-registry/src/main/java/com/amazonaws/services/schemaregis
 
 (TODO: Eliminate the need to make this change each time)
 
+## Build command for multi-lang GSR
+mvn install -P native-image
+Note: If you get any issues due to JAVA_HOME not found, just set it to graalvm java 17 installation path.
+
 #### Initialize class at build time when building GraalVM Native Image
 GraalVM needs to know AOT(ahead-of-time) the reflectively accessed program elements, therefore we
 need to supply these elements through build arguments. For example,

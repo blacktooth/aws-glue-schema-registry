@@ -1,6 +1,5 @@
 package com.amazonaws.services.schemaregistry;
 
-import com.oracle.svm.core.c.ProjectHeaderFile;
 import org.graalvm.nativeimage.c.CContext;
 import org.graalvm.nativeimage.c.function.CFunction;
 import org.graalvm.nativeimage.c.struct.CField;
@@ -36,6 +35,7 @@ public class DataTypes {
         public List<String> getLibraryPaths() {
             String currentDir = System.getProperty("user.dir");
             String path = new File(currentDir, LIB_PATH).getAbsolutePath();
+            return Collections.singletonList(path);
         }
 
         @Override
