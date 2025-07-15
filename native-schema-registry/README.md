@@ -12,6 +12,17 @@ Change `/native-schema-registry/src/main/java/com/amazonaws/services/schemaregis
 mvn install -P native-image
 Note: If you get any issues due to JAVA_HOME not found, just set it to graalvm java 17 installation path.
 
+
+Usually, the process is as follows:
+1. mvn install -P native-image (expected to fail after partial build)
+2. Build C layer (See c/README.md, also expected to fail after partial build) 
+3. mvn install -P native-image (again, and this time it works)
+4. Build C layer (it should build fully during this attempt)
+
+On Amazon Linux, you might need to install cmake, Python, locv, llvm etc and set PATHs accordingly to make it work. These setps are not necessary on Ubnutu as they come in-built.
+
+-------------
+
 #### Initialize class at build time when building GraalVM Native Image
 GraalVM needs to know AOT(ahead-of-time) the reflectively accessed program elements, therefore we
 need to supply these elements through build arguments. For example,
